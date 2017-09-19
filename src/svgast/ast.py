@@ -69,6 +69,14 @@ def to_etree(element):
     return element._etree
 
 
+def get_tag_name(element):
+    return element._tag
+
+
+def get_attr_dict(element):
+    return element._attributes
+
+
 def write(svg_element, file_or_path):
     if not isinstance(svg_element, Svg):
         raise TypeError(
