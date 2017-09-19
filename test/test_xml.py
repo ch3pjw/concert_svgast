@@ -63,3 +63,5 @@ def test_write_path(tmpdir):
 
 def test_bad_write_type():
     raises(TypeError, write, Rect(), None)
+    raises(TypeError, write, Svg(), None, root_type=Rect)
+    write(Rect(), BytesIO(), root_type=Rect)

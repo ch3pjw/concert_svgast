@@ -54,15 +54,18 @@ def xml_declaration_str(encoding):
     return '<?xml version="1.0" encoding="{}" ?>'.format(encoding)
 
 
-def write(svg_element, file_or_path, indent_size=DEFAULT_INDENT_SIZE):
+def write(
+        root_element, file_or_path, indent_size=DEFAULT_INDENT_SIZE,
+        root_type=Svg):
     encoding = 'utf-8'
-    if not isinstance(svg_element, Svg):
+    if not isinstance(root_element, root_type):
         raise TypeError(
-            'Must use an Svg element as document root, got {!r}'.format(
-                type(svg_element).__name__))
+            'Must use an {} element as document root, got {!r}'.format(
+                root_type.__name__,
+                type(root_element).__name__))
     xml_str = '\n'.join(chain(
         (xml_declaration_str(encoding),),
-        _serialise(svg_element, indent_size)))
+        _serialise(root_element, indent_size)))
     do_write = lambda f: f.write(xml_str.encode(encoding))
     if isinstance(file_or_path, str):
         with open(file_or_path, 'wb') as f:
