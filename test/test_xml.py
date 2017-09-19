@@ -9,7 +9,7 @@ from svgast.xml import serialise, write
 example_ast = Svg(
     G(
         Rect(x=1, y="2", width=px(3), height=4),
-        Text('Hello', Rect(), 'World')
+        Text('Hello', Rect(), 'World', cls='awesome')
     ),
     G(
         Circle(),
@@ -21,7 +21,7 @@ expected_xml = '\n'.join((
         example_ast.version, example_ast.xmlns),
     '  <g>',
     '    <rect height="4" width="3px" x="1" y="2" />',
-    '    <text>',
+    '    <text class="awesome">',
     '      Hello',
     '      <rect />',
     '      World',

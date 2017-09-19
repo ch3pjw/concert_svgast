@@ -43,10 +43,16 @@ def open_close_tag_str(element):
     return '<{}{} />'.format(get_tag_name(element), attr_dict_str(element))
 
 
+attr_name_replacements = {
+    'cls': 'class'
+}
+
+
 def attr_dict_str(element):
     d = get_attr_dict(element)
+    items = sorted((attr_name_replacements.get(k, k), v) for k, v in d.items())
     string = ' '.join(
-        '{}="{}"'.format(k.replace('_', '-'), v) for k, v in sorted(d.items()))
+        '{}="{}"'.format(k.replace('_', '-'), v) for k, v in items)
     return ' ' + string if string else string
 
 
