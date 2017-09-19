@@ -62,7 +62,7 @@ def xml_declaration_str(encoding):
 
 def write(
         root_element, file_or_path, indent_size=DEFAULT_INDENT_SIZE,
-        root_type=Svg):
+        root_type=Svg, xml_declaration=True):
     encoding = 'utf-8'
     if not isinstance(root_element, root_type):
         raise TypeError(
@@ -70,7 +70,7 @@ def write(
                 root_type.__name__,
                 type(root_element).__name__))
     xml_str = '\n'.join(chain(
-        (xml_declaration_str(encoding),),
+        (xml_declaration_str(encoding),) if xml_declaration else (),
         _serialise(root_element, indent_size)))
     do_write = lambda f: f.write(xml_str.encode(encoding))
     if isinstance(file_or_path, str):

@@ -61,6 +61,12 @@ def test_write_path(tmpdir):
     assert path.read('rb') == expected_file
 
 
+def test_write_no_declaration():
+    f = BytesIO()
+    write(example_ast, f, xml_declaration=False)
+    assert f.getvalue() == expected_xml.encode('utf-8')
+
+
 def test_bad_write_type():
     raises(TypeError, write, Rect(), None)
     raises(TypeError, write, Svg(), None, root_type=Rect)
