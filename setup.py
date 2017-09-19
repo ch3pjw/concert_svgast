@@ -12,9 +12,8 @@ setup(
     version='0.0.0',
     license='',
     install_requires=[
-        'lxml'
     ],
     extras_require={
-        'test': ['flake8', 'pytest']
+        'test': ['flake8', 'pytest', 'pytest-cov']
     }
 )
