@@ -52,9 +52,13 @@ class Element:
                     e.text = c
                 else:
                     last_child_etree_elem.tail = c
-            else:
+            elif hasattr(c, '_etree'):
                 last_child_etree_elem = c._etree
                 e.append(last_child_etree_elem)
+            else:
+                raise TypeError(
+                    'Can only convert Elements or strings to etree, got '
+                    '{}'.format(type(c).__name__))
         return e
 
 
