@@ -62,20 +62,6 @@ def to_etree(element):
     return element._etree
 
 
-def write(svg_element, file_or_path):
-    if not isinstance(svg_element, Svg):
-        raise TypeError(
-            'Must use an Svg element as document root, got {!r}'.format(
-                type(svg_element)))
-    do_write = lambda f: etree.ElementTree(to_etree(svg_element)).write(
-        f, pretty_print=True, xml_declaration=True, encoding='utf-8')
-    if isinstance(file_or_path, str):
-        with open(file_or_path, 'wb') as f:
-            do_write(f)
-    else:
-        do_write(file_or_path)
-
-
 class Circle(Element):
     pass
 
@@ -195,3 +181,34 @@ class Kern(tuple):
 
     def __str__(self):
         return ' '.join(map(str, self))
+
+
+class EncodingFileWrapper:
+    def __init__(self, f, encoding='utf-8'):
+        self.f = f
+        self.encoding = encoding
+
+    def write(self, byte_string):
+        self.f.write(byte_string.decode(self.encoding))
+
+    def read(self, *args):
+        return self.f.read(*args).encode(self.encoding)
+
+
+def write(svg_element, file_or_path, root_type=Svg):
+    if not isinstance(svg_element, root_type):
+        raise TypeError(
+            'Must use an {} element as document root, got {!r}'.format(
+                root_type.__name__, type(svg_element)))
+    do_write = lambda f: etree.ElementTree(to_etree(svg_element)).write(
+        f, pretty_print=True, xml_declaration=True, encoding='utf-8')
+    if isinstance(file_or_path, str):
+        with open(file_or_path, 'wb') as f:
+            do_write(f)
+    elif file_or_path.mode == 'wb':
+        do_write(file_or_path)
+    elif file_or_path.mode == 'w':
+        do_write(EncodingFileWrapper(file_or_path))
+    else:
+        raise TypeError(
+            'Cannot write to file in mode {!r}'.format(file_or_path.mode))
