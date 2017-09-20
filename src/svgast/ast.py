@@ -2,8 +2,6 @@ import sys
 from collections import namedtuple
 from functools import partial, wraps
 
-from lxml import etree
-
 from .units import to_length, str_number
 
 _module = sys.modules[__name__]
@@ -27,53 +25,23 @@ class Element:
         return self._children[idx]
 
     def __getattr__(self, name):
-        return self._attributes[name]
+        try:
+            return self._attributes[name]
+        except KeyError as e:
+            raise AttributeError(name) from e
 
     @property
     def _tag(self):
         n = type(self).__name__
         return n[0].lower() + n[1:]
 
-    @property
-    def _etree(self):
-        attributes = dict(self._attributes)
-        cls = attributes.pop('cls', None)
-        if cls:
-            attributes['class'] = cls
-        e = etree.Element(
-            self._tag, attrib={
-                k.replace('_', '-'): str(v) for k, v in attributes.items()
-            }
-        )
-        last_child_etree_elem = None
-        for c in self._children:
-            if isinstance(c, str):
-                if last_child_etree_elem is None:
-                    e.text = c
-                else:
-                    last_child_etree_elem.tail = c
-            else:
-                last_child_etree_elem = c._etree
-                e.append(last_child_etree_elem)
-        return e
+
+def get_tag_name(element):
+    return element._tag
 
 
-def to_etree(element):
-    return element._etree
-
-
-def write(svg_element, file_or_path):
-    if not isinstance(svg_element, Svg):
-        raise TypeError(
-            'Must use an Svg element as document root, got {!r}'.format(
-                type(svg_element)))
-    do_write = lambda f: etree.ElementTree(to_etree(svg_element)).write(
-        f, pretty_print=True, xml_declaration=True, encoding='utf-8')
-    if isinstance(file_or_path, str):
-        with open(file_or_path, 'wb') as f:
-            do_write(f)
-    else:
-        do_write(file_or_path)
+def get_attr_dict(element):
+    return element._attributes
 
 
 class Circle(Element):

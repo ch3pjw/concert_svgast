@@ -4,6 +4,6 @@
 from .ast import (
     Circle, Defs, G, Path, Rect, Style, Svg, Symbol, Text, Use,
     m, l, h, v, a, z,
-    M, L, H, V, A, Z,
-    to_etree, write)
+    M, L, H, V, A, Z)
 from .units import px, pt, pc, mm, cm, in_
+from .xml import serialise, write
