@@ -10,4 +10,4 @@ install:
 script:
  - "flake8 ."
    # the dot is for 3.3 compatibility:
- - "py.test --cov=svgast --cov-report=term-missing"
+ - "py.test --cov=svgast --cov-report=term-missing --cov-branch --cov-fail-under=100"

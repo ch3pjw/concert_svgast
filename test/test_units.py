@@ -3,6 +3,10 @@ from pytest import raises
 from svgast.units import mm, cm, in_, px, pt, pc, user
 
 
+def test_bad_type():
+    raises(TypeError, mm, 'hello')
+
+
 def test_str():
     assert str(mm(42)) == '42mm'
     assert str(user(42)) == '42'
@@ -77,6 +81,8 @@ def test_mul():
         assert isinstance(result, mm)
     with raises(TypeError):
         mm(30) * mm(12)
+    with raises(TypeError):
+        'hello' * mm(30)
 
 
 def test_div():
