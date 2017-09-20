@@ -2,7 +2,7 @@ import sys
 from collections import namedtuple
 from functools import partial, wraps
 
-from .units import to_length, str_number
+from .units import to_length
 
 _module = sys.modules[__name__]
 
@@ -94,16 +94,14 @@ class Use(Element):
 
 
 def _str_ins(ins):
-    if ins is z:
-        return 'Z'
-    else:
-        d = ins.__dict__
-        rel = d.pop('rel')
-        letter = ins.letter.lower() if rel else ins.letter.upper()
-        args = ' '.join(map(str, map(str_number, d.values())))
-        return '{} {}'.format(letter, args)
+    d = ins.__dict__
+    rel = d.pop('rel')
+    letter = ins.letter.lower() if rel else ins.letter.upper()
+    args = ' '.join(map(str, map(to_length, d.values())))
+    return '{} {}'.format(letter, args)
 
 
+# FIXME: would like to validate arguements as lengths at construction time
 MoveTo = namedtuple('MoveTo', ('x', 'y', 'rel'))
 MoveTo.letter = 'm'
 MoveTo.__str__ = _str_ins
@@ -128,7 +126,7 @@ ArcTo.__str__ = _str_ins
 ClosePath = namedtuple('ClosePath', ())
 ClosePath.letter = 'z'
 ClosePath.__str__ = lambda _: 'Z'
-ClosePath.__call__ = lambda: z
+ClosePath.__call__ = lambda _: z
 z = ClosePath()
 Z = z
 
@@ -159,7 +157,7 @@ class ViewBox(namedtuple('ViewBox', ('ox', 'oy', 'width', 'height'))):
 
 class Kern(tuple):
     def __new__(cls, *args):
-        return super().__new__(cls, *map(to_length, args))
+        return super().__new__(cls, map(to_length, args))
 
     def __str__(self):
         return ' '.join(map(str, self))

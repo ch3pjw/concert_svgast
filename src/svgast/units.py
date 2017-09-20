@@ -59,13 +59,13 @@ class Length:
         if isinstance(other, Number):
             return type(self)(user(self.px * other))
         else:
-            raise TypeError()
+            return NotImplemented
 
     def __rmul__(self, other):
         if isinstance(other, Number):
             return type(self)(user(other * self.px))
         else:
-            raise TypeError()
+            return NotImplemented
 
     def __truediv__(self, other):
         if isinstance(other, Length):
