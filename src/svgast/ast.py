@@ -94,10 +94,9 @@ class Use(Element):
 
 
 def _str_ins(ins):
-    d = ins.__dict__
-    rel = d.pop('rel')
+    *values, rel = ins
     letter = ins.letter.lower() if rel else ins.letter.upper()
-    args = ' '.join(map(str, map(to_length, d.values())))
+    args = ' '.join(map(str, map(to_length, values)))
     return '{} {}'.format(letter, args)
 
 
