@@ -11,3 +11,12 @@ script:
  - "flake8 ."
    # the dot is for 3.3 compatibility:
  - "py.test --cov=svgast --cov-report=term-missing --cov-branch --cov-fail-under=100"
+notifications:
+  email: false
+  irc:
+    channels:
+     - "chat.freenode.net#concertdaw"
+    on_success: change
+    on_failure: change
+    template:
+     - "%{repository_name}/%{branch} %{result}: %{build_url}"
